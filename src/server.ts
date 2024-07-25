@@ -13,8 +13,6 @@ import envVars from './shared/env-vars';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from "cors";
-import BookingService from "./services/BookingService";
-import InventoryService from "./services/InventoryService";
 // **** Init express **** //
 
 const app = express();
@@ -81,28 +79,6 @@ app.use((err: Error | CustomError, req: Request, res: Response, _: NextFunction)
 // Set static directory (files).
 const staticDir = path.join(__dirname, envVars.folder);
 app.use(express.static(staticDir));
-
-// Run cron job twice a day at 9:00 AM and 4:00 PM
-cron.schedule("0 9,16 * * *", async () => {
-  await BookingService.getAndSaveBrandNewReservations();
-  await BookingService.getAndSavePreviousReservations();
-});
-
-//Run cron job every day at 09.30am CET to send whatsapp message
-cron.schedule("30 9 * * *", async () => {
-  await BookingService.sendMessagesToWhatsapp();
-});
-
-
-// Run cron job every day at 9:00 AM
-cron.schedule('0 9 * * *', async () => {
-  await InventoryService.calculationOfUsage();
-});
-
-// Run corn job every thursday at 10:00 PM
-cron.schedule('0 22 * * 4', async () => {
-  await InventoryService.thursdayMorning();
-});
 
 // // Run cron job every Thursday at 11:59 PM
 // cron.schedule('59 23 * * 4', async () => {

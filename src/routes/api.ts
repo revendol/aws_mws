@@ -1,7 +1,5 @@
 import {Router} from 'express';
-import bookingRouter, {p as bookingPath} from './BookingRouter';
-import laundryRouter, {p as laundryPath} from './LaundryRouter';
-import inventoryRouter, {p as inventoryPath} from './InventoryRouter';
+import productRouter, {p as productPath} from './productRouter';
 
 // Init
 const apiRouter = Router();
@@ -9,9 +7,7 @@ const apiRouter = Router();
 /*================================================
  Add api routes
 ================================================*/
-apiRouter.use(bookingPath.basePath, bookingRouter);
-apiRouter.use(laundryPath.basePath, laundryRouter);
-apiRouter.use(inventoryPath.basePath, inventoryRouter);
+apiRouter.use(productPath.basePath, productRouter);
 // **** Export default **** //
 
 export default apiRouter;
