@@ -30,14 +30,15 @@ export default {
   mongoDB: {
     url: 
     (process.env.MONGO_CONN_URL ?? 
-      'mongodb+srv://unmlma:1Oddpdeb@clusterlma.x6tluir.mongodb.net/smoobu')
+      '')
   },
   googleSheets: {
     clientEmail: process.env.CLIENT_EMAIL ?? '',
     privateKey: process.env.PRIVATE_KEY ?? '',
   },
-  twilioData: {
-    accountSid: process.env.ACCOUNT_SID ?? '',
-    authToken: process.env.AUTH_TOKEN ?? '',
+  FBAData: {
+    SELLER_ID: process.env.SELLER_ID ?? '',
+    AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID ?? '',
+    MWS_AUTH_TOKEN: process.env.MWS_AUTH_TOKEN ?? '',
   },
 } as const;

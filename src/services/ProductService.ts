@@ -11,7 +11,7 @@ class ProductService extends Service {
             const customer = await ProductRepo.addProduct(data);
             return customer;
         } catch (error) {
-            throw new Error('Error adding industry navigation');
+            throw new Error('Error adding Product');
         }
     }
 }
