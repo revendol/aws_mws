@@ -60,7 +60,8 @@
     "morgan": "^1.10.0",
     "node-cron": "^3.0.3",
     "os": "^0.1.2",
-    "validatorjs": "^3.22.1"
+    "validatorjs": "^3.22.1",
+    "xml2js": "^0.6.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
