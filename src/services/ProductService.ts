@@ -8,11 +8,14 @@ class ProductService extends Service {
     }
     public async addProduct(data: any) {
         try {
-            const customer = await ProductRepo.addProduct(data);
-            return customer;
+            const product = await ProductRepo.addProduct(data);
+            return product;
         } catch (error) {
             throw new Error('Error adding Product');
         }
+    }
+    public async allProducts() {
+    return ProductRepo.allProducts();
     }
 }
 

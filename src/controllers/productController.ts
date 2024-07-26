@@ -17,6 +17,11 @@ class ProductController {
         res.status(500).send("Error Adding Data");
       }
     }
+    async getProducts(req: Request, res: Response) {
+      const { page, size, type }: any = req.query;
+      let data: any = await ProductService.allProducts();
+      res.status(OK).json(data);
+    }      
 }
 
 export default new ProductController();
