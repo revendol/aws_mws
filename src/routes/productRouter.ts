@@ -7,7 +7,14 @@ export const p = {
   basePath: '/product',
   createProduct: '/createProduct',
   getProducts: '/getProducts',
+  getFeeds: '/getFeeds',
 } as const;
+
+router.get(
+  p.getFeeds,
+  (req, res) =>
+    ProductController.getFeeds(req, res)
+);
 
 router.post(
   p.createProduct,
@@ -20,5 +27,6 @@ router.get(
   (req, res) =>
     ProductController.getProducts(req, res)
 );
+
 
 export default router;
