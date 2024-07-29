@@ -16,9 +16,8 @@ interface MwsParams {
     SignatureMethod: string;
     SignatureVersion: string;
     AWSAccessKeyId: string;
-    [key: string]: any; // Allows additional properties like 'Signature'
+    [key: string]: any; 
 }
-
 class ProductService extends Service {
     constructor() {
         super(ProductRepo);
