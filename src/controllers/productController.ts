@@ -8,6 +8,11 @@ import StatusCode from "http-status-codes";
 const {OK, INTERNAL_SERVER_ERROR} = StatusCode;
 import { paginate } from "@util/paginate";
 class ProductController {
+  async getFeeds(req: Request, res: Response) {
+    const { page, size, type }: any = req.query;
+    let data: any = await ProductService.allFeeds();
+    res.status(OK).json(data);
+  }  
     async createProduct(req: Request, res: Response) {
         try {
           const { data } = req.body;
@@ -21,7 +26,8 @@ class ProductController {
       const { page, size, type }: any = req.query;
       let data: any = await ProductService.allProducts();
       res.status(OK).json(data);
-    }      
+    }
+    
 }
 
 export default new ProductController();
