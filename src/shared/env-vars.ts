@@ -37,8 +37,9 @@ export default {
     privateKey: process.env.PRIVATE_KEY ?? '',
   },
   FBAData: {
-    SELLER_ID: process.env.SELLER_ID ?? '',
+    AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY ?? '',
     AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID ?? '',
+    SELLER_ID: process.env.SELLER_ID ?? '',
     MWS_AUTH_TOKEN: process.env.MWS_AUTH_TOKEN ?? '',
   },
 } as const;
