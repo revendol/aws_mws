@@ -20,7 +20,7 @@ class ProductService extends Service {
     async getAwsCredentials() {
         const { Credentials } = await this.stsClient.send(
             new AssumeRoleCommand({
-                RoleArn: '',
+                RoleArn: 'arn:aws:iam::123456789012:role/your-SP-API-role-name',
                 RoleSessionName: 'selling-partner-api-session',
             })
         );
