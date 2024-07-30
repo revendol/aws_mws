@@ -1,68 +1,53 @@
 import Service from "@services/Service";
 import ProductRepo from "@repos/ProductRepo";
-import path from "path";
-import fs from "fs";
-//import amazonMws from "amazon-mws";
+import { STSClient, AssumeRoleCommand } from "@aws-sdk/client-sts";
+import { FeedsApiClient } from "@scaleleap/selling-partner-api-sdk";
 import envVars from '@shared/env-vars';
-import axios from "axios";
-import crypto from 'crypto';
-interface MwsParams {
-    Version: string;
-    Action: string;
-    SellerId: string;
-    MWSAuthToken: string;
-    MaxCount: number;
-    Timestamp: string;
-    SignatureMethod: string;
-    SignatureVersion: string;
-    AWSAccessKeyId: string;
-    [key: string]: any; 
-}
+
 class ProductService extends Service {
+    private stsClient;
     constructor() {
         super(ProductRepo);
+        this.stsClient = new STSClient({
+            credentials: {
+                accessKeyId: envVars.FBAData.AWS_ACCESS_KEY_ID,
+                secretAccessKey: envVars.FBAData.AWS_SECRET_ACCESS_KEY,
+            },
+            region: '',
+        });
     }
-    private endpoint = 'https://mws.amazonservices.com/';
-    private version = '2009-01-01';
-    private action = 'GetFeedSubmissionList';
-    private signRequest(params: MwsParams): string {
-        const secretKey = envVars.FBAData.AWS_SECRET_ACCESS_KEY;
-        const sortedParams = Object.keys(params)
-            .filter(key => key !== 'Signature') // Exclude 'Signature' from sorting
-            .sort()
-            .reduce((result: any, key: string) => {
-                result[key] = params[key];
-                return result;
-            }, {});
 
-        const queryString = Object.keys(sortedParams)
-            .map(key => `${encodeURIComponent(key)}=${encodeURIComponent(sortedParams[key])}`)
-            .join('&');
-
-        const stringToSign = `GET\nmws.amazonservices.com\n/\n${queryString}`;
-        return crypto.createHmac('sha256', secretKey).update(stringToSign).digest('base64');
+    async getAwsCredentials() {
+        const { Credentials } = await this.stsClient.send(
+            new AssumeRoleCommand({
+                RoleArn: '',
+                RoleSessionName: 'selling-partner-api-session',
+            })
+        );
+        return Credentials;
     }
+
     public async allFeeds() {
-        const params: MwsParams = {
-            Version: this.version,
-            Action: this.action,
-            SellerId: envVars.FBAData.SELLER_ID,
-            MWSAuthToken: envVars.FBAData.MWS_AUTH_TOKEN,
-            MaxCount: 10,
-            Timestamp: new Date().toISOString(),
-            SignatureMethod: 'HmacSHA256',
-            SignatureVersion: '2',
-            AWSAccessKeyId: envVars.FBAData.AWS_ACCESS_KEY_ID,
-        };
-        params.Signature = this.signRequest(params);
-
         try {
-            const response = await axios.get(this.endpoint, { params });
+            const awsCredentials = await this.getAwsCredentials();
+            const client = new FeedsApiClient({
+                accessToken: 'A2JC975ZK0FJSB',
+                basePath: 'https://sellingpartnerapi-na.amazon.com',
+                region: 'us-east-1',
+                credentials: {
+                    accessKeyId: envVars.FBAData.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: envVars.FBAData.AWS_SECRET_ACCESS_KEY,
+                    sessionToken: envVars.FBAData.MWS_AUTH_TOKEN,
+                },
+            });
+
+            const response = await client.getFeeds({});
             return response.data;
         } catch (error) {
             throw new Error(`Error fetching feed submissions: ${error.message}`);
         }
     }
+
     public async addProduct(data: any) {
         try {
             const product = await ProductRepo.addProduct(data);

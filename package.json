@@ -1,5 +1,5 @@
 {
-  "name": "SmoobuAutomation",
+  "name": "aws-mws",
   "version": "0.0.0",
   "scripts": {
     "build": "npx ts-node build.ts",
