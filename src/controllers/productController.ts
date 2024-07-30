@@ -9,10 +9,13 @@ const {OK, INTERNAL_SERVER_ERROR} = StatusCode;
 import { paginate } from "@util/paginate";
 class ProductController {
   async getFeeds(req: Request, res: Response) {
-    const { page, size, type }: any = req.query;
-    let data: any = await ProductService.allFeeds();
-    res.status(OK).json(data);
-  }  
+    try {
+        const data = await ProductService.allFeeds();
+        res.status(OK).json(data);
+    } catch (error) {
+        res.status(INTERNAL_SERVER_ERROR).json({ error: error.message });
+    }
+}
     async createProduct(req: Request, res: Response) {
         try {
           const { data } = req.body;
