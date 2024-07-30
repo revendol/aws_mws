@@ -13,7 +13,7 @@ class ProductService extends Service {
                 accessKeyId: envVars.FBAData.AWS_ACCESS_KEY_ID,
                 secretAccessKey: envVars.FBAData.AWS_SECRET_ACCESS_KEY,
             },
-            region: '',
+            region: 'us-east-1',
         });
     }
 
